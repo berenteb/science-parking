@@ -1,6 +1,7 @@
 'use client';
 
 import { addDays, endOfDay, formatDate, startOfDay, subDays } from 'date-fns';
+import Link from 'next/link';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { TbChevronLeft, TbChevronRight } from 'react-icons/tb';
@@ -52,7 +53,12 @@ export default function CalendarPage() {
 
   return (
     <main>
-      <h1>Science Parking</h1>
+      <h1 className='mb-10'>Science Parking</h1>
+      <Link href='/'>
+        <button>
+          <TbChevronLeft /> Back to Home
+        </button>
+      </Link>
       <div className='flex items-center justify-center h-40'>
         <button onClick={onDateDecrement} className='h-full rounded-r-none px-2'>
           <TbChevronLeft size={30} />

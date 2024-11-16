@@ -31,11 +31,11 @@ p{
 }
 
 main{
-    @apply container space-y-10 my-10;
+    @apply container space-y-10 my-10 text-center;
 }
 
 main > * {
-    @apply w-full text-center;
+    @apply w-full;
 }
 
 button {
