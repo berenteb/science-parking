@@ -3,4 +3,49 @@
 @tailwind utilities;
 
 body {
+    @apply bg-slate-900 text-slate-300;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    @apply text-slate-100;
+}
+
+h1 {
+    @apply text-4xl mt-10;
+}
+
+h2 {
+    @apply text-3xl;
+}
+
+h3 {
+    @apply text-2xl;
+}
+
+h4 {
+    @apply text-xl;
+}
+
+p{
+    @apply text-slate-200;
+}
+
+main{
+    @apply container space-y-10;
+}
+
+main > * {
+    @apply w-full text-center;
+}
+
+button {
+    @apply bg-slate-800 text-slate-100 px-8 py-4 rounded-lg inline-flex items-center gap-2 hover:bg-slate-700 transition-colors justify-center disabled:opacity-50;
+}
+
+button.primary {
+    @apply bg-white hover:bg-slate-100 text-slate-900;
+}
+
+button.large {
+    @apply text-xl py-4 px-8;
 }
