@@ -2,10 +2,10 @@ import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { TbCalendarPlus } from 'react-icons/tb';
 
-import { AuthOptions } from '@/app/api/auth/[...nextauth]/route';
 import { LoginButton, LogoutButton } from '@/components/auth-button';
 import { CurrentParkingStatus } from '@/components/current-parking-status';
 import { Providers } from '@/components/providers';
+import { AuthOptions } from '@/config/auth-options';
 
 export default async function LoginPage() {
   const session = await getServerSession(AuthOptions);

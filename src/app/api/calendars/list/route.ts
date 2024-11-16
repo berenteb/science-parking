@@ -2,7 +2,7 @@ import axios from 'axios';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 
-import { AuthOptions } from '@/app/api/auth/[...nextauth]/route';
+import { AuthOptions } from '@/config/auth-options';
 
 export async function GET() {
   const session = await getServerSession(AuthOptions);
