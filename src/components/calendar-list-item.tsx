@@ -41,13 +41,18 @@ export function CalendarListItemDisplay({
       )}
     >
       <div
-        className={cn('flex items-center justify-between rounded-lg h-full w-full relative group-hover:bg-blue-400', {
-          'bg-blue-500': selected,
-          'bg-green-500': session.data?.user?.email && currentAvailability?.creator === session.data.user.email,
-          'group-hover:bg-transparent': !calendarDayAvailability.fullPeriodAvailable,
-        })}
+        className={cn(
+          'flex items-center justify-between rounded-lg h-full w-full relative group-hover:bg-blue-400 overflow-hidden',
+          {
+            'bg-blue-500': selected,
+            'bg-green-500': session.data?.user?.email && currentAvailability?.creator === session.data.user.email,
+            'group-hover:bg-transparent': !calendarDayAvailability.fullPeriodAvailable,
+          }
+        )}
       >
-        <p className='font-bold text-xl rotate-90'>{calendarDayAvailability.resource.room}</p>
+        <p className='font-bold text-xl rotate-90 max-w-20 max-h-10 truncate'>
+          {calendarDayAvailability.resource.room}
+        </p>
         <TbCalendarPlus className='rotate-90 flex-grow' size={30} />
         <AnimatePresence>
           {!calendarDayAvailability.fullPeriodAvailable && !isLoading && (
