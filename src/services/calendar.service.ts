@@ -16,7 +16,13 @@ export async function getCalendarList(): Promise<CalendarListItem[]> {
       showHidden: true,
     },
   });
-  return response.data.items.filter((calendar) => calendar.id.endsWith('@resource.calendar.google.com'));
+  return response.data.items.filter(
+    (calendar) => calendar.id.endsWith('@resource.calendar.google.com') && calendarNameConsistsParking(calendar.summary)
+  );
+}
+
+function calendarNameConsistsParking(calendarName: string): boolean {
+  return ['parking', 'parkoló'].some((keyword) => calendarName.toLowerCase().includes(keyword));
 }
 
 export async function getCalendarEvents(

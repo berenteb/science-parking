@@ -1,8 +1,7 @@
-import { isWithinInterval } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
-import { TbCalendarPlus } from 'react-icons/tb';
+import { TbCalendarPlus, TbLoader } from 'react-icons/tb';
 
 import { CalendarDayAvailability } from '@/types/calendar.types';
 import { cn } from '@/utils/style.utils';
@@ -25,13 +24,10 @@ export function CalendarListItemDisplay({
   dateFrom,
 }: CalendarListItemDisplayProps) {
   const session = useSession();
-  const currentAvailability = calendarDayAvailability.availability.find((availability) =>
-    isWithinInterval(new Date(), {
-      start: availability.dateFrom,
-      end: availability.dateTo,
-    })
-  );
 
+  const hasOwnEvent = calendarDayAvailability.availability.some(
+    (availability) => availability.creator === session.data?.user?.email
+  );
   return (
     <button
       disabled={!calendarDayAvailability.fullPeriodAvailable}
@@ -45,7 +41,7 @@ export function CalendarListItemDisplay({
           'flex items-center justify-between rounded-lg h-full w-full relative group-hover:bg-blue-400 overflow-hidden',
           {
             'bg-blue-500': selected,
-            'bg-green-500': session.data?.user?.email && currentAvailability?.creator === session.data.user.email,
+            'bg-green-500': hasOwnEvent,
             'group-hover:bg-transparent': !calendarDayAvailability.fullPeriodAvailable,
           }
         )}
@@ -53,7 +49,11 @@ export function CalendarListItemDisplay({
         <p className='font-bold text-xl rotate-90 max-w-20 max-h-10 truncate'>
           {calendarDayAvailability.resource.room}
         </p>
-        <TbCalendarPlus className='rotate-90 flex-grow' size={30} />
+        {isLoading ? (
+          <TbLoader size={30} className='animate-spin flex-grow' />
+        ) : (
+          <TbCalendarPlus className='rotate-90 flex-grow' size={30} />
+        )}
         <AnimatePresence>
           {!calendarDayAvailability.fullPeriodAvailable && !isLoading && (
             <motion.div

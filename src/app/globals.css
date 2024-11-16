@@ -49,3 +49,11 @@ button.primary {
 button.large {
     @apply text-xl py-4 px-8;
 }
+
+p.success {
+    @apply rounded-md bg-green-500/20 border-green-500 border text-green-500 p-4;
+}
+
+p.error {
+    @apply rounded-md bg-red-500/20 border-red-500 border text-red-500 p-4;
+}

@@ -1,15 +1,16 @@
 'use client';
 
-import { addDays, endOfDay, formatDate, startOfDay, subDays } from 'date-fns';
+import { addDays, endOfDay, formatDate, isSameDay, startOfDay, subDays } from 'date-fns';
 import Link from 'next/link';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { useState } from 'react';
-import { TbChevronLeft, TbChevronRight } from 'react-icons/tb';
+import { TbChevronLeft, TbChevronRight, TbLoader } from 'react-icons/tb';
 
 import { CalendarListItemDisplay } from '@/components/calendar-list-item';
 import { useCreateCalendarEvent } from '@/hooks/mutations/use-create-calendar-event';
 import { useCalendarAvailability } from '@/hooks/queries/use-calendar-availability';
 import { useCalendarList } from '@/hooks/queries/use-calendar-list';
+import { cn } from '@/utils/style.utils';
 
 export default function CalendarPage() {
   const [date, setDate] = useState(startOfDay(new Date()));
@@ -26,30 +27,37 @@ export default function CalendarPage() {
   const onDateIncrement = () => {
     setDate((prev) => addDays(prev, 1));
     setSelectedCalendarId(undefined);
+    createCalendarEvent.reset();
   };
 
   const onDateDecrement = () => {
     setDate((prev) => subDays(prev, 1));
     setSelectedCalendarId(undefined);
+    createCalendarEvent.reset();
   };
 
   const onJumpToToday = () => {
     setDate(startOfDay(new Date()));
     setSelectedCalendarId(undefined);
+    createCalendarEvent.reset();
   };
 
   const userName = session.data?.user?.name;
 
   const onCreateEvent = () => {
     if (selectedCalendarId && userName) {
-      createCalendarEvent.mutate({
-        calendarId: selectedCalendarId,
-        startDate: new Date(date.setHours(8, 0, 0, 0)),
-        endDate: new Date(date.setHours(16, 0, 0, 0)),
-        summary: `${userName}'s parking`,
-      });
+      createCalendarEvent
+        .mutateAsync({
+          calendarId: selectedCalendarId,
+          startDate: new Date(date.setHours(8, 0, 0, 0)),
+          endDate: new Date(date.setHours(16, 0, 0, 0)),
+          summary: `${userName}'s parking`,
+        })
+        .then(() => setTimeout(() => calendarAvailability.refetch(), 2000));
     }
   };
+
+  const isToday = isSameDay(date, new Date());
 
   return (
     <main>
@@ -64,7 +72,9 @@ export default function CalendarPage() {
           <TbChevronLeft size={30} />
         </button>
         <button
-          className='text-3xl text-center block rounded-none border-x-2 border-slate-900 h-full'
+          className={cn('text-3xl text-center block rounded-none border-x-2 border-slate-900 h-full', {
+            'border-blue-500 border': isToday,
+          })}
           onClick={onJumpToToday}
         >
           {formatDate(date, 'E')}
@@ -77,6 +87,13 @@ export default function CalendarPage() {
           <TbChevronRight size={30} />
         </button>
       </div>
+      {calendarList.isLoading && (
+        <div className='flex flex-col items-center animate-pulse'>
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className='border-b-8 border-slate-700 border-dashed w-60 h-32 first-of-type:border-t-8' />
+          ))}
+        </div>
+      )}
       <SessionProvider>
         <div className='flex flex-col items-center'>
           {calendarAvailability.data?.map((availability) => (
@@ -91,9 +108,12 @@ export default function CalendarPage() {
           ))}
         </div>
       </SessionProvider>
-      <button onClick={onCreateEvent} disabled={!selectedCalendarId} className='primary px-8 py-4'>
+      <button onClick={onCreateEvent} disabled={!selectedCalendarId} className='primary large'>
+        {createCalendarEvent.isPending && <TbLoader className='animate-spin' />}
         Reserve for {formatDate(date, 'E d MMM')}
       </button>
+      {createCalendarEvent.error && <p className='error'>{createCalendarEvent.error.message}</p>}
+      {createCalendarEvent.isSuccess && <p className='success'>Event created successfully</p>}
     </main>
   );
 }

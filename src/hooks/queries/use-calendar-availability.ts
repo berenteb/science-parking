@@ -59,6 +59,7 @@ function mapCalendarEventToAvailability(
       const end = event.end?.dateTime ?? endOfDay(new Date()).toISOString();
       return isWithinInterval(currentDate, { start, end }) || isWithinInterval(currentDateEnd, { start, end });
     });
+
     availability.push({
       dateFrom: currentDate,
       dateTo: addHours(currentDate, 1),
