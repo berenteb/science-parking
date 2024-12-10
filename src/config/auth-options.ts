@@ -2,6 +2,7 @@ import { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
 import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from '@/config/environment.config';
+import { refreshAccessToken } from '@/services/token.service';
 
 export const AuthOptions: NextAuthOptions = {
   providers: [
@@ -10,6 +11,8 @@ export const AuthOptions: NextAuthOptions = {
       clientSecret: GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
+          access_type: 'offline',
+          prompt: 'consent',
           scope: `openid https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile`,
         },
       },
@@ -21,6 +24,7 @@ export const AuthOptions: NextAuthOptions = {
         return {
           ...session,
           accessToken: token.accessToken,
+          refreshToken: token.refreshToken,
         };
       }
 
@@ -29,7 +33,9 @@ export const AuthOptions: NextAuthOptions = {
     async jwt({ account, token }) {
       if (account?.access_token) {
         token.accessToken = account.access_token;
+        token.refreshToken = account.refresh_token;
       }
+      await refreshAccessToken(token);
       return token;
     },
   },
