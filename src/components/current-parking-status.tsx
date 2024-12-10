@@ -2,6 +2,7 @@
 
 import { formatDate } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
+import { TbLoader } from 'react-icons/tb';
 
 import { useCalendarList } from '@/hooks/queries/use-calendar-list';
 import { useCurrentParking } from '@/hooks/queries/use-current-parking';
@@ -13,7 +14,8 @@ export function CurrentParkingStatus() {
     <AnimatePresence>
       {(!currentParking.data || !calendars.data) && (
         <div className='h-40 border-dashed rounded-xl border-4 border-slate-500 text-slate-500 p-5 flex items-center justify-center'>
-          No current parking reservations
+          {!currentParking.isLoading && !calendars.isLoading && 'No parking selected'}
+          {(currentParking.isLoading || calendars.isLoading) && <TbLoader className='animate-spin' />}
         </div>
       )}
       {currentParking.data && calendars.data && (
