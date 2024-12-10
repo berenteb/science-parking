@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-    @apply bg-slate-900 text-slate-300;
+    @apply bg-slate-900 text-slate-300 min-h-dvh;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -11,7 +11,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-    @apply text-4xl mt-10;
+    @apply text-4xl;
 }
 
 h2 {
@@ -31,7 +31,7 @@ p{
 }
 
 main{
-    @apply container space-y-10 my-10 text-center;
+    @apply container space-y-10 h-full min-h-dvh text-center py-10;
 }
 
 main > * {

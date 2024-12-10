@@ -10,7 +10,7 @@ import { AuthOptions } from '@/config/auth-options';
 export default async function LoginPage() {
   const session = await getServerSession(AuthOptions);
   return (
-    <main className='flex flex-col items-center justify-center h-screen'>
+    <main className='flex flex-col items-center justify-center'>
       <h1 className='text-center'>Science Parking</h1>
       {session?.user ? <p>Welcome, {session.user.name}!</p> : <LoginButton />}
       {session?.user && (
