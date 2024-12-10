@@ -27,6 +27,7 @@ export function useCalendarAvailability(calendars: CalendarListItem[], startDate
       availability: [],
       fullPeriodAvailable: false,
     })),
+    select: (data) => data.toSorted((a, b) => a.resource.room.localeCompare(b.resource.room)),
   });
 }
 
