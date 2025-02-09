@@ -1,15 +1,14 @@
 import './globals.css';
 
 import type { Metadata } from 'next';
-// eslint-disable-next-line camelcase
 import { Jura } from 'next/font/google';
 import { PropsWithChildren } from 'react';
 
 import { cn } from '@/utils/style.utils';
 
 export const metadata: Metadata = {
-  title: 'Science Parking',
-  description: 'META-INF Science Park Parking',
+  title: 'Science Parking - META-INF',
+  description: 'META-INF Science Parking for Science Park Office',
 };
 
 const JuraFont = Jura({
