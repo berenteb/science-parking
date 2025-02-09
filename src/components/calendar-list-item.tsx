@@ -38,9 +38,9 @@ export function CalendarListItemDisplay({
     >
       <div
         className={cn('flex items-center justify-between rounded-lg h-full w-full relative overflow-hidden', {
-          'bg-blue-500': selected,
+          'bg-blue-500': selected && !hasOwnEvent,
           'bg-green-500': hasOwnEvent,
-          'group-hover:bg-transparent': !calendarDayAvailability.fullPeriodAvailable,
+          'group-hover:bg-transparent': !calendarDayAvailability.fullPeriodAvailable && !hasOwnEvent,
         })}
       >
         <p className='font-bold text-xl rotate-90 max-w-20 max-h-10 truncate'>
