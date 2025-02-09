@@ -3,7 +3,7 @@
 import { addDays, endOfDay, formatDate, isSameDay, startOfDay, subDays } from 'date-fns';
 import Link from 'next/link';
 import { SessionProvider, useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TbChevronLeft, TbChevronRight, TbLoader } from 'react-icons/tb';
 
 import { CalendarListItemDisplay } from '@/components/calendar-list-item';
@@ -19,6 +19,18 @@ export default function CalendarPage() {
   const calendarAvailability = useCalendarAvailability(calendarList.data ?? [], startOfDay(date), endOfDay(date));
   const createCalendarEvent = useCreateCalendarEvent();
   const session = useSession();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.calendar-list') && !target.closest('.primary')) {
+        setSelectedCalendarId(undefined);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   const onSelected = (calendarId: string) => {
     setSelectedCalendarId((prev) => (prev === calendarId ? undefined : calendarId));
@@ -53,7 +65,12 @@ export default function CalendarPage() {
           endDate: new Date(date.setHours(16, 0, 0, 0)),
           summary: `${userName}'s parking`,
         })
-        .then(() => setTimeout(() => calendarAvailability.refetch(), 2000));
+        .then(() =>
+          setTimeout(() => {
+            calendarAvailability.refetch();
+            setSelectedCalendarId(undefined);
+          }, 2000)
+        );
     }
   };
 
@@ -95,7 +112,7 @@ export default function CalendarPage() {
         </div>
       )}
       <SessionProvider>
-        <div className='flex flex-col items-center'>
+        <div className='flex flex-col items-center calendar-list'>
           {calendarAvailability.data?.map((availability) => (
             <CalendarListItemDisplay
               isLoading={calendarAvailability.isFetching}
