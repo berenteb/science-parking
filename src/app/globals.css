@@ -2,8 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7)), url('/background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 body {
-    @apply bg-slate-900 text-slate-300 min-h-dvh font-bold;
+    @apply bg-slate-900/30 text-slate-300 min-h-dvh font-bold;
 }
 
 h1, h2, h3, h4, h5, h6 {
